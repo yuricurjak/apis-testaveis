@@ -5,13 +5,26 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 class ProductsController {
+  constructor(Product) {
+    this.Product = Product;
+  }
+
   get(req, res) {
-    return res.send([{
-      name: 'Default product',
-      description: 'product description',
-      price: 100
-    }]);
+    var _this = this;
+
+    return _asyncToGenerator(function* () {
+      try {
+        const products = yield _this.Product.find({});
+        res.send(products);
+      } catch (err) {
+        res.status(400).send(err.message);
+      }
+    })();
   }
 
 }

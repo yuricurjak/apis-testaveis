@@ -9,14 +9,12 @@ var _mongoose = _interopRequireDefault(require("mongoose"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const mongodbUrl = process.env.MONGODB_URL || 'mongodb://localhost/test';
+const mongodbUrl = process.env.MONGODB_URL || 'mongodb://host.docker.internal:27017/test';
 
 const connect = () => _mongoose.default.connect(mongodbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
-
-const close = () => _mongoose.default.close();
 
 var _default = {
   connect,
