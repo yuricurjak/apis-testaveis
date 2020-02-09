@@ -1,6 +1,6 @@
 import express from 'express';
 import routes from './routes';
-import database from './config/database';
+import database from './database';
 
 class ConfigureExpress {
     constructor () {

@@ -128,4 +128,137 @@ describe('Controllers: Products', () => {
       });
     });
   });
+
+    describe('update() product', () => {
+      it('should respond with 200 when the product has been update', async () => {
+        const fakeId = 'a-fake-id';
+        const updateProduct = {
+          _id: fakeId,
+          name: 'Update product',
+          description: 'Update description',
+          price: 150
+        };
+        const request = {
+          params: {
+            id: fakeId
+          },
+          body: updateProduct
+        };
+        const response = {
+          sendStatus: sinon.spy()
+        };
+        class fakeProduct {
+          static updateOne() {}
+        }
+
+        const updateOneStub = sinon.stub(fakeProduct, 'updateOne');
+        updateOneStub
+            .withArgs({ _id: fakeId }, updateProduct)
+            .resolves(updateProduct);
+
+            const productsController = new ProductsController(fakeProduct);
+
+            await productsController.update(request, response);
+
+            sinon.assert.calledWith(response.sendStatus, 200);
+      });
+
+      context('when an error occurs', () => {
+        it('should return 422', async () => {
+          const fakeId = 'a-fake-id';
+          const updatedProduct = {
+            _id: fakeId,
+            name:'updatedProduct',
+            description: 'Update description',
+            price: 150
+          };
+          const request = {
+            params: {
+              id: fakeId
+            },
+            body: updatedProduct
+          };
+
+          const response = {
+            send: sinon.spy(),
+            status: sinon.stub()
+          };
+
+          class fakeProduct {
+            static updateOne() {}
+          }
+
+          const updateOneStub = sinon.stub(fakeProduct, 'updateOne');
+          updateOneStub
+              .withArgs({_id: fakeId}, updatedProduct)
+              .rejects({ message: 'Error' });
+          
+          response.status.withArgs(422).returns(response);
+
+          const productsController = new ProductsController(fakeProduct);
+          
+          await productsController.update(request, response);
+          sinon.assert.calledWith(response.send, 'Error');
+        });
+      });
+    });
+
+    describe('remove() product', () => {
+      it('should respond with 204 when the product has been deleted', async () => {
+        const fakeId = 'a-fake-id';
+        const request = {
+          params: {
+            id: fakeId
+          }
+        };
+        const response = {
+          sendStatus: sinon.spy()
+        };
+
+        class fakeProduct {
+          static deleteOne() {}
+        }
+
+        const deleteOneStub = sinon.stub(fakeProduct, 'deleteOne');
+
+        deleteOneStub.withArgs({ _id: fakeId }).resolves([1]);
+
+        const productsController = new ProductsController(fakeProduct);
+
+        await productsController.remove(request, response);
+
+        sinon.assert.calledWith(response.sendStatus, 204);
+      });
+
+      context('when a error occurs', () => {
+        it('should return 400', async() => {
+            const fakeId = 'a-fake-id';
+            const request = {
+                params: {
+                    id: fakeId
+                }
+            };
+            const response = {
+                send: sinon.spy(),
+                status: sinon.stub()
+            }
+            class fakeProduct {
+              static deleteOne() {}
+            }
+
+            const deleteOneStub = sinon.stub(fakeProduct, 'deleteOne');
+            deleteOneStub
+              .withArgs({ _id: fakeId })
+              .rejects({ message: 'Error' });
+            
+            response.status.withArgs(400).returns(response);
+
+            const productsController = new ProductsController(fakeProduct);
+
+            await productsController.remove(request, response);
+            sinon.assert.calledWith(response.send, 'Error');
+        });
+    });
+  });
+    
 });

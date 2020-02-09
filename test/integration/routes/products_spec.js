@@ -66,7 +66,7 @@ describe('Routes: Products', () => {
         context('when posting a product', () => {
             
             it('should return a new product with status code 201', done => {
-                const customId = '56cb91bdc3464f14678934ba';
+                const customId = '56cb91bdc3464f14578934ba';
                 const newProduct = Object.assign({}, { _id: customId, __v:0 }, defaultProduct);
 
                 const expectedSavedProduct = {
@@ -83,6 +83,39 @@ describe('Routes: Products', () => {
                     .end((err, res) => {
                         expect(res.statusCode).to.eql(201);
                         expect(res.body).to.eql(expectedSavedProduct);
+                        done(err);
+                    });
+            });
+        });
+    });
+
+    describe('PUT /products/:id', () => {
+        context('when editing a product', () => {
+            it('should update the product and return 200 as status code', done => {
+                const customProduct = {
+                    name: 'Custom name'
+                };
+                const updateProduct = Object.assign({}, customProduct, defaultProduct);
+
+                request
+                  .put(`/products/${defaultId}`)
+                  .send(updateProduct)
+                  .end((err, res) => {
+                      expect(res.status).to.eql(200);
+                      done(err);
+                  });
+            });
+        });
+    });
+
+    describe('DELETE /products/:id', () => {
+        context('when deleting a product', () => {
+            it('should delete a product and return 204 as status code', done => {
+
+                request
+                    .delete(`/products/${defaultId}`)
+                    .end((err, res) => {
+                        expect(res.status).to.eql(204);
                         done(err);
                     });
             });

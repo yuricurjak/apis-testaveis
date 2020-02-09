@@ -8,7 +8,8 @@
     "start": "npm run build && node dist/server.js",
     "start:dev": "babel-node src/app/server.js",
     "test:integration": "NODE_ENV=test mocha --opts ./test/integration/mocha.opts ./test/integration/**/*_spec.js",
-    "test:unit": "NODE_ENV=test mocha --opts test/unit/mocha.opts test/unit/**/*_spec.js"
+    "test:unit": "NODE_ENV=test mocha --opts test/unit/mocha.opts test/unit/**/*_spec.js",
+    "test": "npm run test:unit && npm run test:integration"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "supertest": "^4.0.2"
   },
   "dependencies": {
+    "config": "^1.29.4",
     "express": "^4.17.1",
     "mongoose": "^5.7.13"
   }
