@@ -98,13 +98,14 @@ describe('Routes: Users', () => {
     });
     it('should return unauthorized when the password does not match', done => {
       request
-        .post('/users/autheticate')
+        .post('/users/authenticate')
         .send({
           email: 'jhon@mail.com',
           password: 'adasdasldj'
         })
         .end((err, res) => {
-          expect(res.sendStatus).to.eql(401);
+          console.log(res);
+          expect(res.status).to.eql(401);
           done(err);
         });
     });

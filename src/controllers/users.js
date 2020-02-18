@@ -15,7 +15,9 @@ class UsersController {
 
   async getById(req, res) {
     try {
-      const {params: { id }} = req;
+      const {
+        params: { id }
+      } = req;
       const user = await this.User.find({ _id: id });
       res.send(user);
     } catch (err) {
@@ -34,7 +36,7 @@ class UsersController {
   }
 
   async update(req, res) {
-    const body = req.body;
+    const { body } = req;
     try {
       const user = await this.User.findById(req.params.id);
 
@@ -64,18 +66,17 @@ class UsersController {
   async authenticate(req, res) {
     const AuthService = new this.AuthService(this.User);
     const user = await AuthService.authenticate(req.body);
-      if(!user) {
+    if (!user) {
       return res.sendStatus(401);
-      }
-      const token = this.AuthService.generateToken({
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        role: user.role
-      });
-       
-  
-      res.send({ token });
+    }
+    const token = this.AuthService.generateToken({
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      role: user.role
+    });
+
+    res.send({ token });
   }
 }
 
