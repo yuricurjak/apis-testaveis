@@ -1,4 +1,5 @@
 import Product from '../../../src/models/product'
+import AuthService from '../../../src/services/auth';
 
 describe('Routes: Products', () => {
 
@@ -17,6 +18,14 @@ describe('Routes: Products', () => {
         description: 'product description',
         price: 100
     }
+
+    const expectAdminUser = {
+        _id: defaultId,
+        name: 'Jhon Doe',
+        email: 'jhon@mail.com',
+        role: 'admin'
+    };
+    const authToken = AuthService.generateToken(expectAdminUser);
     
     beforeEach(async () => {
         await Product.deleteMany();
@@ -32,6 +41,7 @@ describe('Routes: Products', () => {
         it('should return a list of products', done => {
             request
             .get('/products')
+            .set({'x-access-token': authToken})
             .end((err, res) => {
                 expect(res.body[0]).to.eql(expectProduct);
                 done(err);
@@ -44,6 +54,7 @@ describe('Routes: Products', () => {
 
                 request
                     .get(`/products/${defaultId}`)
+                    .set({'x-access-token': authToken})
                     .end((err, res) => {
                         expect(res.statusCode).to.eql(200);
                         expect(res.body).to.eql([expectProduct]);
@@ -70,6 +81,7 @@ describe('Routes: Products', () => {
 
                 request
                     .post('/products')
+                    .set({'x-access-token': authToken})
                     .send(newProduct)
                     .end((err, res) => {
                         expect(res.statusCode).to.eql(201);
@@ -90,6 +102,7 @@ describe('Routes: Products', () => {
 
                 request
                   .put(`/products/${defaultId}`)
+                  .set({'x-access-token': authToken})
                   .send(updateProduct)
                   .end((err, res) => {
                       expect(res.status).to.eql(200);
@@ -105,6 +118,7 @@ describe('Routes: Products', () => {
 
                 request
                     .delete(`/products/${defaultId}`)
+                    .set({'x-access-token': authToken})
                     .end((err, res) => {
                         expect(res.status).to.eql(204);
                         done(err);
